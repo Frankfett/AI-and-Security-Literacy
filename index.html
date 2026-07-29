@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy — Learn, Use Safely, Verify</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #1a2a42;
+            --cyan: #00d9ff;
+            --red: #ff3366;
+            --green: #4ade80;
+            --text-primary: #f0f4f8;
+            --text-secondary: #a0aec0;
+            --transition: all 0.3s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, #0f1f36 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* HEADER & PROGRESS */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        .progress-ring-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-ring-svg {
+            width: 100px;
+            height: 100px;
+        }
+
+        .progress-ring-bg {
+            stroke: var(--navy-light);
+            stroke-width: 4;
+            fill: none;
+        }
+
+        .progress-ring {
+            stroke: var(--cyan);
+            stroke-width: 4;
+            fill: none;
+            stroke-linecap: round;
+            transform-origin: 50% 50%;
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 0.6s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--cyan), #00aadd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .intro-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* ACTIVITY CARDS */
+        .activities-section {
+            margin-top: 60px;
+        }
+
+        .activity-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .activity-card:hover {
+            border-color: rgba(0, 217, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.1);
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .activity-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--cyan);
+            min-width: 50px;
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .activity-description {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ACTIVITY CONTENT AREAS */
+        .activity-content {
+            display: none;
+        }
+
+        .activity-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* QUIZ STRUCTURE */
+        .quiz-question {
+            margin-bottom: 30px;
+        }
+
+        .quiz-question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--cyan);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 217, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .quiz-option:hover {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: var(--cyan);
+        }
+
+        .quiz-option input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--cyan);
+        }
+
+        .quiz-feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--green);
+            border-left: 3px solid var(--green);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--red);
+            border-left: 3px solid var(--red);
+        }
+
+        /* SCENARIO CARDS */
+        .scenario-card {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-title {
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .scenario-text {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .scenario-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-button {
+            padding: 12px 16px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .choice-button:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .choice-button:focus {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .consequence {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 3px solid;
+        }
+
+        .consequence.show {
+            display: block;
+        }
+
+        .consequence.safe {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--green);
+            border-left-color: var(--green);
+        }
+
+        .consequence.risky {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--red);
+            border-left-color: var(--red);
+        }
+
+        /* VERIFICATION CHALLENGE */
+        .claim-box {
+            background: rgba(255, 51, 102, 0.08);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--red);
+        }
+
+        .claim-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--red);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .claim-text {
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .red-flags {
+            margin-top: 20px;
+        }
+
+        .red-flags-title {
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .flag-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .flag-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(74, 222, 128, 0.1);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .flag-checkbox {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--green);
+        }
+
+        .flag-text {
+            color: var(--text-secondary);
+        }
+
+        /* ACTION BUTTONS */
+        .action-button {
+            background: linear-gradient(135deg, var(--cyan), #00aadd);
+            color: var(--navy);
+            border: none;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 217, 255, 0.3);
+        }
+
+        .action-button:focus {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* COMPLETION STATE */
+        .completion-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .completion-message h2 {
+            color: var(--green);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .completion-message p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-bottom: 40px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            padding-top: 30px;
+        }
+
+        footer a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .activity-card {
+                padding: 20px;
+            }
+
+            .activity-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .activity-title {
+                font-size: 1.2rem;
+            }
+
+            .intro-text {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="progress-ring-wrapper">
+                <svg class="progress-ring-svg" viewBox="0 0 100 100">
+                    <circle class="progress-ring-bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="progress-ring" id="progressRing" cx="50" cy="50" r="45"></circle>
+                </svg>
+            </div>
+            <h1>AI Literacy</h1>
+            <p class="tagline">Learn. Use Safely. Verify.</p>
+            <p class="intro-text">
+                AI is everywhere. This page will help you understand what AI really is, how to use it ethically and safely, and how to spot when something might be false or misleading. You don't need any special knowledge to start—just curiosity.
+            </p>
+        </header>
+
+        <main class="activities-section">
+            <!-- ACTIVITY 1: WHAT IS AI -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-number">1</div>
+                    <div>
+                        <div class="activity-title">What is AI?</div>
+                    </div>
+                </div>
+                <p class="activity-description">
+                    Let's break down the mystery. AI isn't magic, and it's not a person. It's a tool that learns patterns from data. Let's test your understanding.
+                </p>
+
+                <div class="activity-content active" data-activity="1">
+                    <div class="quiz-question">
+                        <div class="quiz-question-text">📱 Which of these is an example of AI you've actually used?</div>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="correct">
+                                <span>Your phone suggesting the next word as you type a text</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="incorrect">
+                                <span>A calculator doing math</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="incorrect">
+                                <span>A robot that cleans your room</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q1" value="incorrect">
+                                <span>A video game character moving</span>
+                            </label>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-q1"></div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <div class="quiz-question-text">🧠 What does an AI actually do?</div>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="q2" value="incorrect">
+                                <span>It thinks and feels like a person</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q2" value="incorrect">
+                                <span>It knows what you're thinking</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q2" value="correct">
+                                <span>It finds patterns in data and makes predictions based on those patterns</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q2" value="incorrect">
+                                <span>It's a conscious being that can make decisions on its own</span>
+                            </label>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-q2"></div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <div class="quiz-question-text">⚙️ Who built the AI?</div>
+                        <div class="quiz-options">
+                            <label class="quiz-option">
+                                <input type="radio" name="q3" value="correct">
+                                <span>People—engineers, researchers, and companies designed and trained it</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q3" value="incorrect">
+                                <span>AI built itself with no human involvement</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q3" value="incorrect">
+                                <span>The government created it secretly</span>
+                            </label>
+                            <label class="quiz-option">
+                                <input type="radio" name="q3" value="incorrect">
+                                <span>It's been around since the beginning of time</span>
+                            </label>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-q3"></div>
+                    </div>
+
+                    <button class="action-button" onclick="checkActivity(1)">Check Answers</button>
+                </div>
+            </div>
+
+            <!-- ACTIVITY 2: USE SAFELY & ETHICALLY -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-number">2</div>
+                    <div>
+                        <div class="activity-title">Use Safely & Ethically</div>
+                    </div>
+                </div>
+                <p class="activity-description">
+                    AI can help you learn, create, and explore—but only if you use it the right way. Let's walk through some real scenarios.
+                </p>
+
+                <div class="activity-content active" data-activity="2">
+                    <div class="scenario-card">
+                        <div class="scenario-title">📝 Scenario 1: Writing Your Essay</div>
+                        <div class="scenario-text">
+                            Your history essay is due tomorrow. You're stuck on how to start it. You think about using ChatGPT to write the whole thing for you.
+                        </div>
+                        <div class="scenario-choices">
+                            <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                                ❌ Use AI to write the whole essay, then turn it in with your name
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                                ✅ Use AI to brainstorm ideas, then write the essay yourself
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                                ❌ Copy a paragraph from ChatGPT but change a few words
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                                ✅ Ask AI to explain a concept you don't understand, then explain it in your own words
+                            </button>
+                        </div>
+                        <div class="consequence" id="consequence-1"></div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-title">🔐 Scenario 2: Sharing Information</div>
+                        <div class="scenario-text">
+                            You're testing an AI chatbot and you paste your school schedule, your friend's phone number, and your home address so it can "help" you plan your week.
+                        </div>
+                        <div class="scenario-choices">
+                            <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                                ❌ Share all your personal info; the AI probably won't remember it anyway
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                                ✅ Never paste personal info, phone numbers, or addresses into any AI tool
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                                ❌ Share it because "the company promised it's private"
+                            </button>
+                        </div>
+                        <div class="consequence" id="consequence-2"></div>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-title">👥 Scenario 3: Deepfakes & Impersonation</div>
+                        <div class="scenario-text">
+                            You discover an AI tool that can create fake videos of celebrities. Your friends think it's funny. You're tempted to try it.
+                        </div>
+                        <div class="scenario-choices">
+                            <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                                ❌ Create a fake video of a celebrity and share it online for laughs
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                                ✅ Understand that creating deepfakes of real people (even for "fun") is unethical and could be illegal
+                            </button>
+                            <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                                ❌ Make a fake video and say "it's just a joke" when people get mad
+                            </button>
+                        </div>
+                        <div class="consequence" id="consequence-3"></div>
+                    </div>
+
+                    <button class="action-button" onclick="completeActivity(2)">Complete Activity 2</button>
+                </div>
+            </div>
+
+            <!-- ACTIVITY 3: VERIFY BEFORE YOU TRUST -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-number">3</div>
+                    <div>
+                        <div class="activity-title">Verify Before You Trust</div>
+                    </div>
+                </div>
+                <p class="activity-description">
+                    AI can make mistakes, hallucinate facts, or be outdated. Always verify what it tells you. Here's how to spot red flags.
+                </p>
+
+                <div class="activity-content active" data-activity="3">
+                    <div class="claim-box">
+                        <div class="claim-label">AI Claim</div>
+                        <div class="claim-text">
+                            "The Great Wall of China is 50,000 miles long and was built in just 10 years using only shovels and picks."
+                        </div>
+                    </div>
+
+                    <div class="red-flags">
+                        <div class="red-flags-title">🚩 Spot the Red Flags:</div>
+                        <div class="flag-list">
+                            <label class="flag-item">
+                                <input type="checkbox" class="flag-checkbox" onchange="updateFlagCount()">
+                                <span class="flag-text"><strong>Extreme number:</strong> 50,000 miles seems really high—it might be wrong. Look it up.</span>
+                            </label>
+                            <label class="flag-item">
+                                <input type="checkbox" class="flag-checkbox" onchange="updateFlagCount()">
+                                <span class="flag-text"><strong>Unrealistic timeframe:</strong> 10 years to build a wall that spans continents? Check the real history.</span>
+                            </label>
+                            <label class="flag-item">
+                                <input type="checkbox" class="flag-checkbox" onchange="updateFlagCount()">
+                                <span class="flag-text"><strong>Vague details:</strong> "just shovels and picks" sounds oversimplified. Real historical events are more complex.</span>
+                            </label>
+                            <label class="flag-item">
+                                <input type="checkbox" class="flag-checkbox" onchange="updateFlagCount()">
+                                <span class="flag-text"><strong>Missing sources:</strong> The AI didn't cite any historians or official sources. Always ask: "Where did this come from?"</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card" style="margin-top: 25px;">
+                        <div class="scenario-title">📚 How to Verify:</div>
+                        <div class="scenario-text">
+                            <strong>Step 1:</strong> Google the claim yourself.<br>
+                            <strong>Step 2:</strong> Check reliable sources (Wikipedia, National Geographic, government websites, academic papers).<br>
+                            <strong>Step 3:</strong> See if multiple independent sources agree.<br>
+                            <strong>Step 4:</strong> If sources disagree, read carefully to understand why.<br><br>
+                            <strong>The Real Facts:</strong> The Great Wall is actually about 13,000 miles long (depending on what you measure) and took over 2,000 years to build, with many different dynasties contributing.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card" style="margin-top: 20px;">
+                        <div class="scenario-title">🎯 Your Turn:</div>
+                        <div class="scenario-text">
+                            Next time an AI (or anyone) tells you something important, ask yourself:
+                        </div>
+                        <div class="flag-list">
+                            <div class="flag-item" style="cursor: default;">
+                                <span class="flag-text">Does this sound too extreme or too simple?</span>
+                            </div>
+                            <div class="flag-item" style="cursor: default;">
+                                <span class="flag-text">Can I find the same information from other trusted sources?</span>
+                            </div>
+                            <div class="flag-item" style="cursor: default;">
+                                <span class="flag-text">Is there a date on this information? Could it be outdated?</span>
+                            </div>
+                            <div class="flag-item" style="cursor: default;">
+                                <span class="flag-text">Do I understand where the information came from?</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="action-button" onclick="completeActivity(3)">Complete Activity 3</button>
+                </div>
+            </div>
+
+            <!-- COMPLETION MESSAGE -->
+            <div class="completion-message" id="completionMessage">
+                <h2>🎉 You Did It!</h2>
+                <p>
+                    You now understand the basics of AI literacy. You know what AI is, how to use it safely and ethically, and how to verify claims before trusting them. Keep these lessons in mind as you explore AI tools in the future. Stay curious, stay safe, and always verify.
+                </p>
+            </div>
+        </main>
+
+        <footer>
+            <p>
+                Created to help you understand AI safely and ethically. Learn more about responsible AI at
+                <a href="https://www.nist.gov/artificial-intelligence" target="_blank">NIST AI</a> and
+                <a href="https://owasp.org/www-project-llm-top-10/" target="_blank">OWASP LLM Top 10</a>.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== STATE MANAGEMENT =====
+        const LOCAL_STORAGE_KEY = "ai-literacy-progress";
+
+        function loadProgress() {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            return saved ? JSON.parse(saved) : { activity1: false, activity2: false, activity3: false };
+        }
+
+        function saveProgress(progress) {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progress));
+            updateProgressRing();
+        }
+
+        function updateProgressRing() {
+            const progress = loadProgress();
+            const completed = Object.values(progress).filter(Boolean).length;
+            const radius = 45;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (completed / 3) * circumference;
+
+            const ring = document.getElementById("progressRing");
+            ring.style.strokeDasharray = circumference;
+            ring.style.strokeDashoffset = offset;
+        }
+
+        // ===== ACTIVITY 1: QUIZ =====
+        function checkActivity(activityNum) {
+            if (activityNum !== 1) return;
+
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+
+            const feedback1 = document.getElementById("feedback-q1");
+            const feedback2 = document.getElementById("feedback-q2");
+            const feedback3 = document.getElementById("feedback-q3");
+
+            let allCorrect = true;
+
+            // Q1 Feedback
+            if (q1?.value === "correct") {
+                feedback1.textContent = "✅ Right! Predictive text learns from your typing patterns.";
+                feedback1.className = "quiz-feedback show correct";
+            } else {
+                feedback1.textContent = "❌ Not quite. Predictive text is AI that learns from patterns in your typing.";
+                feedback1.className = "quiz-feedback show incorrect";
+                allCorrect = false;
+            }
+
+            // Q2 Feedback
+            if (q2?.value === "correct") {
+                feedback2.textContent = "✅ Exactly! AI finds patterns in data and makes predictions.";
+                feedback2.className = "quiz-feedback show correct";
+            } else {
+                feedback2.textContent = "❌ Not correct. AI doesn't think or feel like humans—it finds patterns in data.";
+                feedback2.className = "quiz-feedback show incorrect";
+                allCorrect = false;
+            }
+
+            // Q3 Feedback
+            if (q3?.value === "correct") {
+                feedback3.textContent = "✅ Correct! People designed, built, and trained every AI system.";
+                feedback3.className = "quiz-feedback show correct";
+            } else {
+                feedback3.textContent = "❌ Not quite. Humans created all AI systems. It doesn't build itself.";
+                feedback3.className = "quiz-feedback show incorrect";
+                allCorrect = false;
+            }
+
+            if (allCorrect) {
+                completeActivity(1);
+            }
+        }
+
+        // ===== ACTIVITY 2: SCENARIOS =====
+        function showConsequence(button, type) {
+            const scenario = button.closest(".scenario-card");
+            const consequenceDiv = scenario.querySelector(".consequence");
+
+            if (type === "safe") {
+                consequenceDiv.textContent = "✅ Great choice! This is the ethical and safe way to use AI.";
+                consequenceDiv.className = "consequence show safe";
+            } else {
+                consequenceDiv.textContent = "❌ This choice could get you in trouble. It's unethical, could violate your school's policy, or even be illegal.";
+                consequenceDiv.className = "consequence show risky";
+            }
+        }
+
+        // ===== ACTIVITY 3: VERIFICATION =====
+        function updateFlagCount() {
+            const checkboxes = document.querySelectorAll(".flag-checkbox");
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            if (checked === checkboxes.length) {
+                // All red flags identified; ready to complete
+            }
+        }
+
+        // ===== COMPLETION =====
+        function completeActivity(activityNum) {
+            const progress = loadProgress();
+            progress[`activity${activityNum}`] = true;
+            saveProgress(progress);
+
+            // Show completion message if all done
+            const allComplete = Object.values(progress).every(Boolean);
+            if (allComplete) {
+                document.getElementById("completionMessage").classList.add("show");
+                window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+            }
+        }
+
+        // ===== INITIALIZE =====
+        document.addEventListener("DOMContentLoaded", () => {
+            updateProgressRing();
+
+            // Show completion message if already completed
+            const progress = loadProgress();
+            if (Object.values(progress).every(Boolean)) {
+                document.getElementById("completionMessage").classList.add("show");
+            }
+        });
+    </script>
+</body>
+</html>
