@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 5: Hands-On Validation — AI & Security Literacy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #1a2a42;
+            --cyan: #00d9ff;
+            --red: #ff3366;
+            --green: #4ade80;
+            --text-primary: #f0f4f8;
+            --text-secondary: #a0aec0;
+            --transition: all 0.3s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, #0f1f36 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--green), #2ade6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .activity-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        /* INTRO BOX */
+        .intro-box {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 50px;
+            line-height: 1.8;
+        }
+
+        .intro-box h2 {
+            color: var(--cyan);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .intro-box p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .intro-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* TASK CARD */
+        .task-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .task-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green);
+            min-width: 50px;
+        }
+
+        .task-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .task-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* PROMPT BOX */
+        .prompt-section {
+            background: rgba(0, 217, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-left: 3px solid var(--cyan);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .prompt-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--cyan);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .prompt-text {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        /* INSTRUCTIONS */
+        .instructions {
+            background: rgba(255, 51, 102, 0.05);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-left: 3px solid var(--red);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .instructions strong {
+            color: var(--text-primary);
+            display: block;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+
+        /* RESPONSE INPUT */
+        .response-section {
+            margin-bottom: 25px;
+        }
+
+        .response-label {
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .response-textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            min-height: 120px;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        .response-textarea:focus {
+            outline: 2px solid var(--cyan);
+            outline-offset: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .response-hint {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* VALIDATION CHECKLIST */
+        .validation-section {
+            display: none;
+        }
+
+        .validation-section.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .validation-title {
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checklist {
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .checklist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px;
+            background: rgba(74, 222, 128, 0.05);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: var(--green);
+        }
+
+        .checklist-item label {
+            color: var(--text-secondary);
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        /* REFLECTION */
+        .reflection-section {
+            display: none;
+            background: rgba(255, 51, 102, 0.05);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .reflection-section.show {
+            display: block;
+        }
+
+        .reflection-title {
+            font-weight: 700;
+            color: var(--red);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .reflection-prompt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .reflection-textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            min-height: 80px;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        .reflection-textarea:focus {
+            outline: 2px solid var(--red);
+            outline-offset: 0;
+        }
+
+        /* ACTION BUTTONS */
+        .action-button {
+            background: linear-gradient(135deg, var(--green), #2ade6f);
+            color: var(--navy);
+            border: none;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(74, 222, 128, 0.3);
+        }
+
+        .action-button:focus {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        /* COMPLETION */
+        .completion-section {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 12px;
+            margin-top: 60px;
+        }
+
+        .completion-section.show {
+            display: block;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .completion-section h2 {
+            color: var(--green);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .completion-section p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        /* NAVIGATION */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: 2px solid var(--cyan);
+            background: transparent;
+            color: var(--cyan);
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .nav-button.back {
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        .nav-button.back:hover {
+            background: rgba(160, 174, 192, 0.1);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-bottom: 40px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            padding-top: 30px;
+        }
+
+        footer a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .task-card {
+                padding: 20px;
+            }
+
+            .task-title {
+                font-size: 1.1rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Home</a>
+            </div>
+            <h1>Activity 5: Hands-On Validation</h1>
+            <p class="activity-subtitle">
+                Use Claude. Validate responses. Think critically.
+            </p>
+        </header>
+
+        <main>
+            <!-- INTRO -->
+            <div class="intro-box">
+                <h2>🎯 How This Works</h2>
+                <p>
+                    You're about to interact with Claude directly. For each task, you'll see a prompt to give Claude, then you'll paste Claude's response into this page and validate it using a <span class="highlight">structured checklist</span>.
+                </p>
+                <p>
+                    <strong>Your goal:</strong> Think like a security professional. Don't just accept what AI tells you—verify, question, and validate. This is <span class="highlight">human in the loop</span> thinking.
+                </p>
+                <p>
+                    <strong>Setup:</strong> Open Claude in another tab (your mentor's account), paste the prompt, and copy the response back here.
+                </p>
+            </div>
+
+            <!-- TASK 1: FACTUAL QUESTION -->
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-number">1</div>
+                    <div>
+                        <div class="task-title">Factual Validation</div>
+                    </div>
+                </div>
+                <p class="task-description">
+                    Ask Claude a factual question, then validate the answer against trusted sources.
+                </p>
+
+                <div class="prompt-section">
+                    <div class="prompt-label">Prompt to Give Claude:</div>
+                    <div class="prompt-text">
+                        "When was the Panama Canal completed, and which two oceans does it connect?"
+                    </div>
+                </div>
+
+                <div class="instructions">
+                    <strong>What to do:</strong>
+                    <span>1. Open Claude in another tab<br>2. Paste the prompt above<br>3. Copy Claude's response<br>4. Paste it below<br>5. Validate using the checklist</span>
+                </div>
+
+                <div class="response-section">
+                    <div class="response-label">📝 Paste Claude's Response Here:</div>
+                    <textarea class="response-textarea" id="response-1" placeholder="Paste Claude's full response here..."></textarea>
+                    <div class="response-hint">Tip: Copy the entire response, including any caveats or disclaimers Claude includes.</div>
+                </div>
+
+                <button class="action-button" onclick="showValidation(1)">Validate Response</button>
+
+                <div class="validation-section" id="validation-1">
+                    <div class="validation-title">✅ Fact-Check Checklist:</div>
+                    <div class="checklist">
+                        <div class="checklist-items">
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t1c1" onchange="updateCompletion()">
+                                <label for="t1c1"><strong>Cross-reference:</strong> Did you verify the facts on Wikipedia or Google? Do they match?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t1c2" onchange="updateCompletion()">
+                                <label for="t1c2"><strong>Date accuracy:</strong> Is the completion date correct? (1914)</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t1c3" onchange="updateCompletion()">
+                                <label for="t1c3"><strong>Ocean names:</strong> Did Claude name the Atlantic and Pacific? Is that accurate?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t1c4" onchange="updateCompletion()">
+                                <label for="t1c4"><strong>Completeness:</strong> Did Claude's answer address the full question, or miss something?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t1c5" onchange="updateCompletion()">
+                                <label for="t1c5"><strong>Confidence:</strong> Does Claude express appropriate confidence, or sound uncertain?</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reflection-section show">
+                        <div class="reflection-title">💭 Reflection:</div>
+                        <div class="reflection-prompt">
+                            Did Claude get it right? What would you tell Claude if it made an error?
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-1" placeholder="Write your thoughts here..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TASK 2: QUALITY EVALUATION -->
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-number">2</div>
+                    <div>
+                        <div class="task-title">Quality & Usefulness Assessment</div>
+                    </div>
+                </div>
+                <p class="task-description">
+                    Ask Claude for practical advice, then evaluate whether the response is truly useful or just surface-level.
+                </p>
+
+                <div class="prompt-section">
+                    <div class="prompt-label">Prompt to Give Claude:</div>
+                    <div class="prompt-text">
+                        "Give me 3 practical tips for staying focused while studying for exams."
+                    </div>
+                </div>
+
+                <div class="instructions">
+                    <strong>What to do:</strong>
+                    <span>1. Paste the prompt into Claude<br>2. Copy the response<br>3. Paste it below<br>4. Ask: Is this generic advice I could find anywhere, or is it actually thoughtful?</span>
+                </div>
+
+                <div class="response-section">
+                    <div class="response-label">📝 Paste Claude's Response Here:</div>
+                    <textarea class="response-textarea" id="response-2" placeholder="Paste Claude's full response here..."></textarea>
+                    <div class="response-hint">Look for specific, actionable advice that goes beyond "study hard."</div>
+                </div>
+
+                <button class="action-button" onclick="showValidation(2)">Validate Response</button>
+
+                <div class="validation-section" id="validation-2">
+                    <div class="validation-title">✅ Quality Checklist:</div>
+                    <div class="checklist">
+                        <div class="checklist-items">
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t2c1" onchange="updateCompletion()">
+                                <label for="t2c1"><strong>Specificity:</strong> Are the tips concrete and actionable, or vague?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t2c2" onchange="updateCompletion()">
+                                <label for="t2c2"><strong>Originality:</strong> Could you have gotten this same advice from a generic website?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t2c3" onchange="updateCompletion()">
+                                <label for="t2c3"><strong>Personalization:</strong> Does Claude consider different learning styles or situations?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t2c4" onchange="updateCompletion()">
+                                <label for="t2c4"><strong>Depth:</strong> Does Claude explain *why* each tip works, not just *what* to do?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t2c5" onchange="updateCompletion()">
+                                <label for="t2c5"><strong>Applicability:</strong> Can you actually use this advice, or is it too abstract?</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reflection-section show">
+                        <div class="reflection-title">💭 Reflection:</div>
+                        <div class="reflection-prompt">
+                            Which tip was most useful? Which was most generic? How would you improve Claude's answer?
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-2" placeholder="Write your thoughts here..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TASK 3: INCOMPLETE/MISSING INFO -->
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-number">3</div>
+                    <div>
+                        <div class="task-title">Spotting Gaps & Missing Context</div>
+                    </div>
+                </div>
+                <p class="task-description">
+                    Ask Claude a complex question, then look for missing nuance, disclaimers, or caveats that should have been included.
+                </p>
+
+                <div class="prompt-section">
+                    <div class="prompt-label">Prompt to Give Claude:</div>
+                    <div class="prompt-text">
+                        "Is social media good or bad for teenagers?"
+                    </div>
+                </div>
+
+                <div class="instructions">
+                    <strong>What to do:</strong>
+                    <span>1. Paste the prompt<br>2. Copy the response<br>3. Ask yourself: Is Claude taking a side, or acknowledging nuance? Are there missing perspectives?</span>
+                </div>
+
+                <div class="response-section">
+                    <div class="response-label">📝 Paste Claude's Response Here:</div>
+                    <textarea class="response-textarea" id="response-3" placeholder="Paste Claude's full response here..."></textarea>
+                    <div class="response-hint">Look for balanced analysis, not oversimplification.</div>
+                </div>
+
+                <button class="action-button" onclick="showValidation(3)">Validate Response</button>
+
+                <div class="validation-section" id="validation-3">
+                    <div class="validation-title">✅ Nuance & Context Checklist:</div>
+                    <div class="checklist">
+                        <div class="checklist-items">
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t3c1" onchange="updateCompletion()">
+                                <label for="t3c1"><strong>Balance:</strong> Does Claude present both pros and cons, or take a single stance?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t3c2" onchange="updateCompletion()">
+                                <label for="t3c2"><strong>Context:</strong> Does Claude acknowledge that "good/bad" depends on how it's used?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t3c3" onchange="updateCompletion()">
+                                <label for="t3c3"><strong>Missing perspectives:</strong> Are there viewpoints Claude didn't mention?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t3c4" onchange="updateCompletion()">
+                                <label for="t3c4"><strong>Evidence:</strong> Does Claude cite research or just make claims?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t3c5" onchange="updateCompletion()">
+                                <label for="t3c5"><strong>Uncertainty:</strong> Does Claude admit when there's no simple answer?</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reflection-section show">
+                        <div class="reflection-title">💭 Reflection:</div>
+                        <div class="reflection-prompt">
+                            Did Claude oversimplify or provide balanced analysis? What perspective did Claude miss?
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-3" placeholder="Write your thoughts here..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TASK 4: VERIFICATION SCENARIO -->
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-number">4</div>
+                    <div>
+                        <div class="task-title">Real-World Verification</div>
+                    </div>
+                </div>
+                <p class="task-description">
+                    Ask Claude something you can quickly verify using a search, then compare.
+                </p>
+
+                <div class="prompt-section">
+                    <div class="prompt-label">Prompt to Give Claude:</div>
+                    <div class="prompt-text">
+                        "What year did the Titanic sink, and what was the main reason it sank?"
+                    </div>
+                </div>
+
+                <div class="instructions">
+                    <strong>What to do:</strong>
+                    <span>1. Get Claude's response<br>2. Paste it below<br>3. Use Google to verify the facts<br>4. Compare: Did Claude get it right? Are there details Claude omitted?</span>
+                </div>
+
+                <div class="response-section">
+                    <div class="response-label">📝 Paste Claude's Response Here:</div>
+                    <textarea class="response-textarea" id="response-4" placeholder="Paste Claude's full response here..."></textarea>
+                    <div class="response-hint">Then do a quick Google search to verify.</div>
+                </div>
+
+                <button class="action-button" onclick="showValidation(4)">Validate Response</button>
+
+                <div class="validation-section" id="validation-4">
+                    <div class="validation-title">✅ Verification Checklist:</div>
+                    <div class="checklist">
+                        <div class="checklist-items">
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t4c1" onchange="updateCompletion()">
+                                <label for="t4c1"><strong>Fact-checked:</strong> Did you search for the Titanic sinking date? Does it match?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t4c2" onchange="updateCompletion()">
+                                <label for="t4c2"><strong>Main reason:</strong> Did Claude identify the iceberg collision as the primary cause? Accurate?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t4c3" onchange="updateCompletion()">
+                                <label for="t4c3"><strong>Completeness:</strong> Did Claude mention other factors (speed, crew error, design flaws)?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t4c4" onchange="updateCompletion()">
+                                <label for="t4c4"><strong>Confidence:</strong> Did Claude sound confident, or express uncertainty where appropriate?</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="t4c5" onchange="updateCompletion()">
+                                <label for="t4c5"><strong>Sources:</strong> Did Claude cite or suggest sources, or just state facts?</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reflection-section show">
+                        <div class="reflection-title">💭 Reflection:</div>
+                        <div class="reflection-prompt">
+                            Was Claude accurate? What surprised you? How does this change how you'll evaluate Claude's answers in the future?
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-4" placeholder="Write your thoughts here..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLETION SECTION -->
+            <div class="completion-section" id="completionSection">
+                <h2>🎉 All Tasks Complete!</h2>
+                <p>
+                    You've practiced human-in-the-loop validation. You asked Claude questions, examined its responses critically, and thought like a security professional. That's exactly what AI literacy means.
+                </p>
+                <p>
+                    You now understand: AI is a tool, not an oracle. Always verify, always question, always think critically.
+                </p>
+            </div>
+
+            <!-- NAVIGATION -->
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-button back">← Back Home</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>
+                You've completed all 5 activities. You're now equipped with AI literacy, online safety knowledge, and critical thinking skills. Keep learning, stay safe, and verify before you trust.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function showValidation(taskNum) {
+            const response = document.getElementById(`response-${taskNum}`).value;
+            if (!response.trim()) {
+                alert('Please paste Claude\'s response first.');
+                return;
+            }
+            document.getElementById(`validation-${taskNum}`).classList.add('show');
+        }
+
+        function updateCompletion() {
+            const allCheckboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const checkedCount = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+
+            // Show completion if many checks are done
+            if (checkedCount > 12) {
+                document.getElementById('completionSection').classList.add('show');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if all validations were already shown
+            const responses = [1, 2, 3, 4].map(i => document.getElementById(`response-${i}`).value).filter(r => r.trim());
+            if (responses.length === 4) {
+                document.getElementById('completionSection').classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>
