@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 2: Use Safely & Ethically — AI & Security Literacy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #1a2a42;
+            --cyan: #00d9ff;
+            --red: #ff3366;
+            --green: #4ade80;
+            --text-primary: #f0f4f8;
+            --text-secondary: #a0aec0;
+            --transition: all 0.3s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, #0f1f36 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--cyan), #00aadd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .activity-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        /* ACTIVITY CARD */
+        .activity-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .activity-description {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* SCENARIO CARDS */
+        .scenario-card {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-title {
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .scenario-text {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .scenario-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-button {
+            padding: 12px 16px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .choice-button:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .choice-button:focus {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .consequence {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 3px solid;
+        }
+
+        .consequence.show {
+            display: block;
+        }
+
+        .consequence.safe {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--green);
+            border-left-color: var(--green);
+        }
+
+        .consequence.risky {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--red);
+            border-left-color: var(--red);
+        }
+
+        /* COMPLETION STATE */
+        .completion-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .completion-message h2 {
+            color: var(--green);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .completion-message p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* NAVIGATION */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: 2px solid var(--cyan);
+            background: transparent;
+            color: var(--cyan);
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .nav-button.back {
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        .nav-button.back:hover {
+            background: rgba(160, 174, 192, 0.1);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-bottom: 40px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            padding-top: 30px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .activity-card {
+                padding: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="breadcrumb">
+                <a href="index.html">← Back to Home</a>
+            </div>
+            <h1>Activity 2: Use Safely & Ethically</h1>
+            <p class="activity-subtitle">
+                Navigate real-world scenarios and learn what to do—and what never to do.
+            </p>
+        </header>
+
+        <main>
+            <div class="activity-card">
+                <p class="activity-description">
+                    You'll see three real-world scenarios. For each one, choose an option and see the consequence. There are no "wrong" answers—just learn from each choice.
+                </p>
+
+                <!-- SCENARIO 1 -->
+                <div class="scenario-card">
+                    <div class="scenario-title">📝 Scenario 1: Writing Your Essay</div>
+                    <div class="scenario-text">
+                        Your history essay is due tomorrow. You're stuck on how to start it. You think about using ChatGPT to write the whole thing for you.
+                    </div>
+                    <div class="scenario-choices">
+                        <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                            ❌ Use AI to write the whole essay, then turn it in with your name
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                            ✅ Use AI to brainstorm ideas, then write the essay yourself
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                            ❌ Copy a paragraph from ChatGPT but change a few words
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                            ✅ Ask AI to explain a concept you don't understand, then explain it in your own words
+                        </button>
+                    </div>
+                    <div class="consequence" id="consequence-1"></div>
+                </div>
+
+                <!-- SCENARIO 2 -->
+                <div class="scenario-card">
+                    <div class="scenario-title">🔐 Scenario 2: Sharing Information</div>
+                    <div class="scenario-text">
+                        You're testing an AI chatbot and you paste your school schedule, your friend's phone number, and your home address so it can "help" you plan your week.
+                    </div>
+                    <div class="scenario-choices">
+                        <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                            ❌ Share all your personal info; the AI probably won't remember it anyway
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                            ✅ Never paste personal info, phone numbers, or addresses into any AI tool
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                            ❌ Share it because "the company promised it's private"
+                        </button>
+                    </div>
+                    <div class="consequence" id="consequence-2"></div>
+                </div>
+
+                <!-- SCENARIO 3 -->
+                <div class="scenario-card">
+                    <div class="scenario-title">👥 Scenario 3: Deepfakes & Impersonation</div>
+                    <div class="scenario-text">
+                        You discover an AI tool that can create fake videos of celebrities. Your friends think it's funny. You're tempted to try it.
+                    </div>
+                    <div class="scenario-choices">
+                        <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                            ❌ Create a fake video of a celebrity and share it online for laughs
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'safe')">
+                            ✅ Understand that creating deepfakes of real people is unethical and could be illegal
+                        </button>
+                        <button class="choice-button" onclick="showConsequence(this, 'risky')">
+                            ❌ Make a fake video and say "it's just a joke" when people get mad
+                        </button>
+                    </div>
+                    <div class="consequence" id="consequence-3"></div>
+                </div>
+
+                <button class="action-button" onclick="completeActivity()" style="margin-top: 30px;">Complete Activity 2</button>
+
+                <div class="completion-message" id="completionMessage">
+                    <h2>🎉 Activity Complete!</h2>
+                    <p>You've learned how to use AI safely and ethically. Now move on to Activity 3 to learn how to verify claims before trusting them.</p>
+                </div>
+            </div>
+
+            <!-- NAVIGATION -->
+            <div class="nav-buttons">
+                <a href="activity-1.html" class="nav-button back">← Back: Activity 1</a>
+                <a href="activity-3.html" class="nav-button">Next: Activity 3 →</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>Ethical AI use starts with making conscious choices about how you interact with technology.</p>
+        </footer>
+    </div>
+
+    <script>
+        const LOCAL_STORAGE_KEY = "ai-literacy-progress";
+
+        function loadProgress() {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            return saved ? JSON.parse(saved) : { activity1: false, activity2: false, activity3: false, activity4: false, activity5: false };
+        }
+
+        function saveProgress(progress) {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progress));
+        }
+
+        function showConsequence(button, type) {
+            const scenario = button.closest(".scenario-card");
+            const consequenceDiv = scenario.querySelector(".consequence");
+
+            if (type === "safe") {
+                consequenceDiv.textContent = "✅ Great choice! This is the ethical and safe way to use AI.";
+                consequenceDiv.className = "consequence show safe";
+            } else {
+                consequenceDiv.textContent = "❌ This choice could get you in trouble. It's unethical, could violate your school's policy, or even be illegal.";
+                consequenceDiv.className = "consequence show risky";
+            }
+        }
+
+        function completeActivity() {
+            const progress = loadProgress();
+            progress.activity2 = true;
+            saveProgress(progress);
+            document.getElementById('completionMessage').classList.add('show');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = loadProgress();
+            if (progress.activity2) {
+                document.getElementById('completionMessage').classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>
